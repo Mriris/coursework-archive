@@ -3,7 +3,7 @@
 # score: null 表示显式强制"待评分"，不写 score 则采用描述中解析出的分数。
 # 增删科目 = 增删条目。
 #
-# mirror：国内镜像站根地址，卡片会额外提供「镜像 ↗」入口（{mirror}/{owner}/{repo}）。
+# mirror：国内镜像站根地址，卡片会额外提供「镜像↗」入口（{mirror}/{owner}/{repo}）。
 # 换镜像改这一行即可；删掉该行则不显示镜像入口。
 mirror: https://kkgithub.com
 works:

@@ -47,7 +47,7 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
           class="ext-link relative z-10 ml-auto"
           :aria-label="`在 GitHub 打开：${work.course}·${work.title}`"
         >
-          仓库 ↗
+          仓库↗
         </a>
         <a
           v-if="mirrorUrl"
@@ -57,7 +57,7 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
           class="ext-link relative z-10"
           :aria-label="`在国内镜像站打开：${work.course}·${work.title}`"
         >
-          镜像 ↗
+          镜像↗
         </a>
       </div>
     </article>

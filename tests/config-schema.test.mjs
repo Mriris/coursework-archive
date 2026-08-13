@@ -86,7 +86,7 @@ describe('mergeWork（§4.2 覆盖合并）', () => {
     expect(merged.score).toBe(100);
   });
 
-  it('score: null 是显式覆盖（强制进行中）', () => {
+  it('score: null 是显式覆盖（强制待评分）', () => {
     expect(mergeWork({ ...base, score: null }, DESC).score).toBeNull();
   });
 

@@ -31,22 +31,26 @@ const filtered = computed(() =>
   }),
 );
 
-const yearSpan = `${Math.min(...works.map((w) => w.year))}–${Math.max(...works.map((w) => w.year))}`;
-const wipCount = works.filter((w) => w.score === null).length;
+const yearSpan = `${Math.min(...works.map((w) => w.year))}—${Math.max(...works.map((w) => w.year))}`;
+const pendingCount = works.filter((w) => w.score === null).length;
+const scores = works.map((w) => w.score).filter((s): s is number => s !== null);
+const avgScore =
+  scores.length > 0 ? (scores.reduce((sum, s) => sum + s, 0) / scores.length).toFixed(1) : null;
 </script>
 
 <template>
   <div class="mx-auto max-w-6xl px-5 py-10 md:py-14">
-    <header class="mb-8 flex items-start justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight md:text-4xl">大作业存档</h1>
-        <p class="mt-2 text-sm" style="color: var(--text-dim)">
-          {{ yearSpan }} · 共 {{ works.length }} 项课程大作业<template v-if="wipCount > 0">
-            · {{ wipCount }} 项进行中（置顶）</template
-          >
-        </p>
+    <header class="mb-10">
+      <div class="flex items-start justify-between gap-4">
+        <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">大作业存档</h1>
+        <ThemeToggle />
       </div>
-      <ThemeToggle />
+      <div class="gold-rule mt-6" aria-hidden="true" />
+      <p class="mt-4 font-mono text-[13px] tracking-wide" style="color: var(--text-dim)">
+        {{ yearSpan }} · 共 {{ works.length }} 项课程大作业<template v-if="avgScore">
+          · 均分 {{ avgScore }}</template
+        ><template v-if="pendingCount > 0"> · {{ pendingCount }} 项待评分（置顶）</template>
+      </p>
     </header>
 
     <FilterBar
@@ -65,7 +69,7 @@ const wipCount = works.filter((w) => w.score === null).length;
         v-for="(w, i) in filtered"
         :key="w.repo"
         layout
-        :while-hover="{ y: -6 }"
+        :while-hover="{ y: -4 }"
         :while-press="{ scale: 0.98 }"
         :transition="{ type: 'spring', stiffness: 350, damping: 26 }"
         class="h-full"

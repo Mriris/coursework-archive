@@ -4,7 +4,7 @@ import { compareWorks, sortWorks } from '../src/composables/sortWorks';
 const w = (repo, score, date) => ({ repo, score, date });
 
 describe('sortWorks（§6.1 未出分置顶）', () => {
-  it('未出分（进行中）固定排在已出分之前', () => {
+  it('未出分（待评分）固定排在已出分之前', () => {
     const sorted = sortWorks([
       w('a', 100, '2024-11'),
       w('b', null, '2023-01'),

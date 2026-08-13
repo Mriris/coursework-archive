@@ -1,6 +1,6 @@
 /**
  * 构建冒烟（§9）：dist/index.html 存在且包含全部标题、每张卡片的 GitHub 外链、
- * 镜像入口（配置时）与「进行中」徽章文案。
+ * 镜像入口（配置时）与「待评分」徽章文案。
  */
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -40,7 +40,7 @@ if (indexHtml) {
     }
   }
   if (works.some((w) => w.score === null)) {
-    assert(indexHtml.includes('进行中'), 'index.html 缺少「进行中」徽章文案');
+    assert(indexHtml.includes('待评分'), 'index.html 缺少「待评分」徽章文案');
   }
 }
 

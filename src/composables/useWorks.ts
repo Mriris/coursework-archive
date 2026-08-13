@@ -47,9 +47,3 @@ export const works: Work[] = sortWorks(data.works);
 export function mirrorUrlFor(work: Work): string | null {
   return mirror ? `${mirror}/${work.owner}/${work.repo}` : null;
 }
-
-/** 稳定序号：按时间升序编号（01 起），与筛选/展示排序无关 */
-const byDateAsc = [...works].sort((a, b) => a.date.localeCompare(b.date));
-export const workNumbers: Record<string, string> = Object.fromEntries(
-  byDateAsc.map((w, i) => [w.repo, String(i + 1).padStart(2, '0')]),
-);

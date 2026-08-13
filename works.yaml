@@ -1,6 +1,6 @@
 # 大作业收录清单（§2）：每条最少只写 url，其余从 GitHub 仓库描述自动解析。
 # 可手填 course / title / date / score 逐字段覆盖自动解析结果；
-# score: null 表示显式强制"进行中"，不写 score 则采用描述中解析出的分数。
+# score: null 表示显式强制"待评分"，不写 score 则采用描述中解析出的分数。
 # 增删科目 = 增删条目。
 #
 # mirror：国内镜像站根地址，卡片会额外提供「镜像 ↗」入口（{mirror}/{owner}/{repo}）。

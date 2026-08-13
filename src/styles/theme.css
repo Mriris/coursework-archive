@@ -2,55 +2,62 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* 标题衬线：构建时按用字子集化的 Noto Serif SC 700（scripts/subset-font.mjs 生成） */
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../assets/noto-serif-sc-700-subset.woff2') format('woff2');
+}
+
 @theme {
   --font-sans:
     system-ui, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-serif:
+    'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif CJK SC', 'Songti SC', SimSun, serif;
   --font-mono: ui-monospace, 'Cascadia Code', Consolas, 'Courier New', monospace;
 }
 
 /*
- * §5.1 明暗不是取反，是两种光照。
- * §5.2 OKLCH 锁色相：色相角固定，明暗只调 L / C。
- * 每张卡片通过 style 注入 --hue（色相表未命中时注入 --c: 0 回退中性灰）。
+ * §5.1 玄鉴双主题：曜石（暗，碳黑 + 暖象牙字）× 纸面（浅，象牙纸 + 墨字），
+ * 共用一条铜金强调色（--accent），明暗只调 L / C，色相角锁定。
+ * §5.2 语言色相系统保留但降级为点缀：仅用于卡片语言圆点与焦点环（--wa）。
  */
 :root {
-  /* 浅色 · refractive（色散）：近白微冷灰底，中亮度高饱和强调，无 glow */
-  --bg: oklch(0.98 0.003 250);
-  --bg-soft: oklch(0.955 0.005 250);
-  --surface: oklch(0.998 0.001 250);
-  --text: oklch(0.28 0.02 262);
-  --text-dim: oklch(0.5 0.015 262);
-  --border: oklch(0.88 0.008 255);
-  --hue-accent: 285;
-  --accent: oklch(0.52 0.19 var(--hue-accent));
-  --chip-bg: oklch(0.945 0.008 255);
+  /* 浅色 · 纸面 */
+  --bg: oklch(0.961 0.008 92);
+  --bg-soft: oklch(0.935 0.01 92);
+  --surface: oklch(0.98 0.005 95);
+  --text: oklch(0.26 0.02 270);
+  --text-dim: oklch(0.49 0.015 270);
+  --border: oklch(0.87 0.012 92);
+  --hue-accent: 80;
+  --accent: oklch(0.54 0.105 var(--hue-accent)); /* 深铜金 */
   --card-l: 0.5;
-  --card-c: 0.17;
-  --card-glow-alpha: 0; /* 浅色主题无 glow（§5.1） */
-  --card-ring-alpha: 0.5; /* 锐利多色描边 */
-  --aurora-opacity: 0.2;
-  --grid-line: oklch(0.5 0.01 260 / 0.05);
+  --card-c: 0.15;
+  --noise-opacity: 0.05;
+  --scene-top: oklch(1 0.005 95 / 0.6); /* 纸面顶部受光 */
+  --scene-bottom: oklch(0.42 0.045 80 / 0.07); /* 底部暖渐晕 */
   --shadow-card:
-    0 1px 2px oklch(0.3 0.02 262 / 0.07), 0 10px 28px oklch(0.3 0.02 262 / 0.08);
+    0 1px 2px oklch(0.35 0.03 80 / 0.05), 0 14px 34px oklch(0.35 0.03 80 / 0.08);
 }
 
 .dark {
-  /* 暗色 · emissive（发光）：近黑微偏色相底，高亮度低饱和霓虹 + glow */
-  --bg: oklch(0.155 0.015 268);
-  --bg-soft: oklch(0.19 0.018 268);
-  --surface: oklch(0.225 0.02 268 / 0.55);
-  --text: oklch(0.93 0.008 262);
-  --text-dim: oklch(0.71 0.018 262);
-  --border: oklch(0.33 0.02 268);
-  --accent: oklch(0.78 0.17 var(--hue-accent));
-  --chip-bg: oklch(0.27 0.02 268);
-  --card-l: 0.78;
-  --card-c: 0.15;
-  --card-glow-alpha: 0.35;
-  --card-ring-alpha: 0.38;
-  --aurora-opacity: 0.32;
-  --grid-line: oklch(0.9 0.01 260 / 0.035);
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 14px 36px oklch(0 0 0 / 0.35);
+  /* 暗色 · 曜石 */
+  --bg: oklch(0.147 0.007 280);
+  --bg-soft: oklch(0.176 0.008 280);
+  --surface: oklch(0.19 0.009 280);
+  --text: oklch(0.912 0.012 88);
+  --text-dim: oklch(0.655 0.015 88);
+  --border: oklch(0.3 0.012 280);
+  --accent: oklch(0.78 0.105 var(--hue-accent)); /* 亮铜金 */
+  --card-l: 0.74;
+  --card-c: 0.12;
+  --noise-opacity: 0.04;
+  --scene-top: oklch(0.34 0.02 285 / 0.35); /* 曜石顶部冷光泽 */
+  --scene-bottom: oklch(0 0 0 / 0.5); /* 底部沉入纯黑 */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.5), 0 18px 44px oklch(0 0 0 / 0.42);
 }
 
 html {
@@ -66,5 +73,5 @@ body {
 }
 
 ::selection {
-  background: oklch(var(--card-l) var(--card-c) var(--hue-accent) / 0.3);
+  background: oklch(var(--card-l) var(--card-c) var(--hue-accent) / 0.32);
 }

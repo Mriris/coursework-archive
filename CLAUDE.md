@@ -12,7 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev        # 开发服务器（用已提交的 works.json 快照，无需 gh）
 npm test           # 全部单测（Vitest）
 npx vitest run tests/parse-description.test.mjs   # 单个测试文件
-npm run fetch      # 重新抓取数据生成 src/data/works.json（需 gh auth login）
+npm run fetch      # 抓数据生成 src/data/works.json 并重生成字体子集（需 gh auth login）
+npm run subset     # 仅重生成标题衬线字体子集（衬线用字变化时跑）
 npm run build      # fetch + vite-ssg 预渲染（会联网抓数据）
 npm run build:site # 仅 vite-ssg 构建，跳过抓取（用快照）
 npm run preview    # 预览 dist，端口固定 9000（见下方端口说明）
@@ -32,30 +33,32 @@ works.yaml → scripts/fetch-works.mjs（唯一有 I/O 的模块）→ src/data/
 ```
 
 - `works.yaml`：收录清单。顶层 `mirror` 为镜像站根地址（删除即隐藏镜像入口）；每条最少写 `url`，可手填 `course`/`title`/`date`/`score` 覆盖自动解析。
-- `scripts/config-schema.mjs`（纯函数）：zod v4 校验 + 覆盖合并。关键语义：`score: null` 是显式强制"进行中"，与不写 `score`（用解析值）不同；描述解析失败仅在手填未补齐 course/title/date 三项时才致命。
+- `scripts/config-schema.mjs`（纯函数）：zod v4 校验 + 覆盖合并。关键语义：`score: null` 是显式强制"待评分"，与不写 `score`（用解析值）不同；描述解析失败仅在手填未补齐 course/title/date 三项时才致命。
 - `scripts/parse-description.mjs`（纯函数）：解析仓库描述 `【YYYY-M】课程-标题[-分数]`。月份必须补零；标题必须 `join('-')` 防截断；末段纯数字才算分数。
 - `scripts/pick-language.mjs`（纯函数）：主语言 = 排除样式/标记语言（CSS/HTML/SCSS/Less/Stylus）后字节数最大者；内含语言→OKLCH 色相角映射表。**前端 LangBar 已删，但 WorkCard 色相仍从此模块导入 `hueForLanguage`，是色相表的唯一事实来源。**
 - `scripts/fetch-works.mjs`：gh api 子进程（每仓库 2 个请求：meta + languages），3 次指数退避重试，404 不重试直接报仓库名。启动先探测 gh 安装/登录。
 - `src/data/works.json`：结构为 `{ mirror, works }`，**提交进 git 作为快照**，clone 后无需 gh 即可开发。
+- `scripts/subset-font.mjs`：从 fontsource 的 Noto Serif SC 700 全量 CJK 文件（约 1.5MB）按用字裁出 `src/assets/noto-serif-sc-700-subset.woff2`（约 12KB，**提交进 git**）。用字 = 脚本内 `UI_TEXT`（h1/钤印文案与数字）+ 全部课程名；改界面上的衬线文案须同步 `UI_TEXT` 并重跑 `npm run subset`。
 - 错误处理原则：数据完整性问题（schema 不合法、描述无法解析且未补齐、仓库 404）一律构建失败；内容缺失（languages 为空）优雅降级。
 
 ### 前端
 
-- 入口 `src/main.ts` 用 `vite-ssg/single-page`（无 vue-router），`App.vue` = MotionConfig + AuroraBackground + IndexView。
-- 排序在 `src/composables/sortWorks.ts`（纯函数，有单测）：`score === null`（进行中）置顶，两组内部按 date 降序；筛选不改变顺序。
-- 卡片序号按时间升序稳定编号（`useWorks.ts` 的 `workNumbers`），与展示排序无关。
+- 入口 `src/main.ts` 用 `vite-ssg/single-page`（无 vue-router），`App.vue` = MotionConfig + IndexView；背景场景（受光/渐晕/噪点）由 obsidian.css 的 `body::before/::after` 纯 CSS 承担。
+- 排序在 `src/composables/sortWorks.ts`（纯函数，有单测）：`score === null`（待评分）置顶，两组内部按 date 降序；筛选不改变顺序。
+- 卡片左上角展示归档年月（`work.date`，形如 `2023-10`）；卡片主标题是课程名（`course`），副行是作业名（`title`）。
 - 卡片外链结构：整卡是绝对定位的覆盖层 `<a class="card-link">`（GitHub），镜像 `<a class="mirror-link">` 以 `z-10` 叠在其上 —— **不允许 `<a>` 嵌套**，改动卡片时保持该结构。
 
-### 主题与视觉（OKLCH 双主题）
+### 主题与视觉（玄鉴 · OKLCH 双主题）
 
-- token 全在 `src/styles/theme.css`：色相角锁定，明暗只改 L/C。浅色"色散"（无 glow、锐利描边）、暗色"发光"（玻璃 + glow），两套是不同物理隐喻，不是取反。
-- 每张卡片经 style 注入 `--hue`（色相表未命中时注入 `--c: 0` 回退中性灰），`--wa` 在 holo.css 里合成。
+- token 全在 `src/styles/theme.css`：曜石（暗，碳黑 + 暖象牙字）× 纸面（浅，象牙纸 + 墨字）双主题，共用铜金强调色 `--accent`（`--hue-accent: 80` 锁定，明暗只改 L/C）。
+- 语言色相系统降级为点缀：每张卡片经 style 注入 `--hue`（色相表未命中时注入 `--c: 0` 回退中性灰），`--wa` 在 obsidian.css 合成，仅用于语言圆点与整卡焦点环；色相表事实来源仍是 `scripts/pick-language.mjs` 的 `hueForLanguage`。
+- 标题衬线为 Noto Serif SC 700：构建时按用字子集化（见上方 `scripts/subset-font.mjs`），`@font-face` 声明在 theme.css 顶部，指向 `src/assets/` 下的子集 woff2；正文系统黑体、数据等宽。
+- 特效全部是全局 CSS（`src/styles/obsidian.css`）：精密面板 `.panel`、hover 铜金掠光一次（`.panel::before` conic mask）、评分钤印 `.seal`（满分双圈 / 待评分虚线脉冲）、页眉金线 `.gold-rule`；Inspira UI 组件已全部移除，**不引入 WebGL/Canvas 类组件**。交互动效用 motion-v，入场 stagger 是纯 CSS（`--i` 变量），保证静态 HTML 不执行 JS 也完整可读。
 - 主题切换：VueUse `useDark`（class `.dark`，storage key `vueuse-color-scheme`）+ index.html 内联防闪烁脚本 + ThemeToggle 的 View Transitions 圆形扩散。
-- Inspira UI 移植组件在 `src/components/inspira/`（CardSpotlight/GlowBorder/AuroraBackground），全部 CSS/pointer 实现；**不引入 WebGL/Canvas 类组件**。交互动效用 motion-v，入场 stagger 是纯 CSS（`--i` 变量），保证静态 HTML 不执行 JS 也完整可读。
 
 ### ⚠ 已踩过的坑：scoped 样式里的 `:global(.dark)`
 
-当前 Vue SFC 编译器会把 `<style scoped>` 里的 `:global(.dark) .xxx` 错误拆成选择器列表 `.dark, .xxx[data-v]`，规则泄漏到 `html.dark` 上（曾导致整页 `display:none` 白屏）。**暗色覆盖规则必须写在全局 CSS（holo.css）或用 Tailwind `dark:` 变体类，绝不在 scoped 块里写 `:global(.dark)` 后代选择器。**
+当前 Vue SFC 编译器会把 `<style scoped>` 里的 `:global(.dark) .xxx` 错误拆成选择器列表 `.dark, .xxx[data-v]`，规则泄漏到 `html.dark` 上（曾导致整页 `display:none` 白屏）。**暗色覆盖规则必须写在全局 CSS（obsidian.css）或用 Tailwind `dark:` 变体类，绝不在 scoped 块里写 `:global(.dark)` 后代选择器。**
 
 ### 测试与 CI
 

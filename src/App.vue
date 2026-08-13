@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { MotionConfig } from 'motion-v';
-import AuroraBackground from './components/inspira/AuroraBackground.vue';
 import IndexView from './views/IndexView.vue';
 </script>
 
 <template>
+  <!-- 背景场景（受光/渐晕/噪点）由 obsidian.css 的 body::before / body::after 承担 -->
   <MotionConfig reduced-motion="user">
-    <AuroraBackground />
     <IndexView />
   </MotionConfig>
 </template>

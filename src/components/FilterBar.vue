@@ -35,11 +35,11 @@ const query = defineModel<string>('query', { default: '' });
 <style scoped>
 .filter-control {
   padding: 0.5rem 0.85rem;
-  border-radius: 0.7rem;
+  border-radius: 0.5rem;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   transition: border-color 0.2s ease;
 }
 

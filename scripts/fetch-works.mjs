@@ -94,7 +94,7 @@ async function main() {
 
   const works = await Promise.all(entries.map((entry) => fetchWork(entry)));
   for (const w of works) {
-    const scoreText = w.score === null ? '进行中' : String(w.score);
+    const scoreText = w.score === null ? '待评分' : String(w.score);
     console.log(
       `  ✓ ${w.owner}/${w.repo}  ${w.date}  ${w.course} - ${w.title}  [${scoreText}]  ${w.primaryLanguage}`,
     );

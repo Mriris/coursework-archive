@@ -1,0 +1,217 @@
+/* §5.3 玄鉴构件：曜石/纸面场景、精密面板、铜金掠光、评分钤印。
+ * 全部纯 CSS（无 WebGL/Canvas）；暗色覆盖一律写在本全局文件，
+ * 绝不在 scoped 块里写 :global(.dark) 后代选择器（编译器会错误拆分选择器）。 */
+
+/* ---- 场景：顶部受光 + 底部渐晕 + 噪点肌理（替代旧极光背景，静态零 JS） ---- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(110% 55% at 50% -8%, var(--scene-top), transparent 62%),
+    radial-gradient(130% 70% at 50% 118%, var(--scene-bottom), transparent 60%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+}
+
+/* ---- 卡片色相注入：WorkCard 通过 style 写 --hue / --c（仅语言圆点使用） ---- */
+.work-card {
+  --c: var(--card-c);
+  --wa: oklch(var(--card-l) var(--c) var(--hue, 0)); /* work accent */
+}
+
+/* ---- 精密面板：实底、1px 边、厚重投影；hover 边框渗入铜金 ---- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.work-card:hover .panel,
+.work-card:focus-within .panel {
+  border-color: color-mix(in oklch, var(--accent) 55%, var(--border));
+}
+
+/* ---- 铜金掠光：hover / focus 时沿边框掠过一次即收（§5.3） ---- */
+@property --sweep-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--sweep-angle),
+    transparent 0% 6%,
+    color-mix(in oklch, var(--accent) 80%, transparent) 15%,
+    oklch(0.92 0.09 90) 18%,
+    color-mix(in oklch, var(--accent) 80%, transparent) 21%,
+    transparent 30%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.work-card:hover .panel::before,
+.work-card:focus-within .panel::before {
+  animation: gold-sweep 1.1s cubic-bezier(0.4, 0, 0.2, 1) 1 forwards;
+}
+
+@keyframes gold-sweep {
+  0% {
+    --sweep-angle: 0deg;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    --sweep-angle: 360deg;
+    opacity: 0;
+  }
+}
+
+/* ---- 评分钤印（ScoreBadge）：圆章描边，满分双圈，待评分虚线空章脉冲 ---- */
+.seal {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in oklch, var(--accent) 85%, transparent);
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.seal-full {
+  outline: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  outline-offset: 2.5px;
+}
+
+.seal-pending {
+  border-style: dashed;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  animation: pending-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pending-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---- 铜金细线：页眉分隔（左实右虚，典雅收笔） ---- */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 28%, transparent) 55%,
+    transparent
+  );
+}
+
+/* ---- 入场：CSS stagger（无 JS 也完整可读，animation 由 CSS 自行播放） ---- */
+.entrance {
+  animation: rise-in 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ---- 主题切换 View Transition：圆形扩散（§5.3） ---- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root),
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root),
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+/* ---- 焦点环（§5.4）：整卡链接用当前语言色相，其余用铜金 ---- */
+.card-link:focus-visible {
+  outline: 2px solid var(--wa);
+  outline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- 无障碍：reduced motion 关闭掠光/脉冲/入场/扩散（§5.4） ---- */
+@media (prefers-reduced-motion: reduce) {
+  .entrance {
+    animation: none;
+  }
+
+  .seal-pending {
+    animation: none;
+  }
+
+  .panel::before {
+    animation: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

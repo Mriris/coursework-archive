@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "fetch": "node scripts/fetch-works.mjs",
+    "fetch": "node scripts/fetch-works.mjs && node scripts/subset-font.mjs",
+    "subset": "node scripts/subset-font.mjs",
     "build": "npm run fetch && vite-ssg build",
     "build:site": "vite-ssg build",
     "test": "vitest run",
@@ -18,8 +19,10 @@
     "vue": "^3.5.41"
   },
   "devDependencies": {
+    "@fontsource/noto-serif-sc": "^5.2.8",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-vue": "^6.0.8",
+    "subset-font": "^2.5.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",

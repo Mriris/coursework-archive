@@ -1,7 +1,7 @@
 /**
  * works.yaml 结构校验 + 覆盖合并（§4.2）。纯函数，无 I/O。
  * 条目最少只写 url；手填 course / title / date / score 逐字段覆盖描述解析结果。
- * score: null 是显式覆盖（强制"进行中"），与不写 score（用解析值）语义不同。
+ * score: null 是显式覆盖（强制"待评分"），与不写 score（用解析值）语义不同。
  */
 import { z } from 'zod';
 import { parseDescription } from './parse-description.mjs';

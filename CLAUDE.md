@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目
 
-课程大作业存档站（Vue 3 + vite-ssg 单页静态站），部署在 https://mriris.github.io/coursework-archive/ 。卡片墙展示 8 项大作业，整卡外跳 GitHub 仓库，右下角提供国内镜像入口；站点不渲染 README、无详情页、无路由。
+课程大作业存档站（Vue 3 + vite-ssg 单页静态站），部署在 https://mriris.github.io/coursework-archive/ 。卡片墙展示 8 项大作业，整卡外跳 GitHub 仓库，右下角提供「仓库 ↗」「镜像 ↗」显式入口；站点不渲染 README、无详情页、无路由。
 
 ## 常用命令
 
@@ -46,7 +46,7 @@ works.yaml → scripts/fetch-works.mjs（唯一有 I/O 的模块）→ src/data/
 - 入口 `src/main.ts` 用 `vite-ssg/single-page`（无 vue-router），`App.vue` = MotionConfig + IndexView；背景场景（受光/渐晕/噪点）由 obsidian.css 的 `body::before/::after` 纯 CSS 承担。
 - 排序在 `src/composables/sortWorks.ts`（纯函数，有单测）：`score === null`（待评分）置顶，两组内部按 date 降序；筛选不改变顺序。首页把待评分/已评分两组上下分开渲染，中间 `.group-divider` 虚线分割（任一组为空则不渲染分割线，见 IndexView）。
 - 卡片左上角展示归档年月（`work.date`，形如 `2023-10`）；卡片主标题是课程名（`course`），副行是作业名（`title`）。
-- 卡片外链结构：整卡是绝对定位的覆盖层 `<a class="card-link">`（GitHub），镜像 `<a class="mirror-link">` 以 `z-10` 叠在其上 —— **不允许 `<a>` 嵌套**，改动卡片时保持该结构。
+- 卡片外链结构：整卡是绝对定位的覆盖层 `<a class="card-link">`（GitHub），右下角「仓库 ↗」「镜像 ↗」两个显式 `<a class="ext-link">` 以 `z-10` 叠在其上 —— **不允许 `<a>` 嵌套**，改动卡片时保持该结构。
 
 ### 主题与视觉（玄鉴 · OKLCH 双主题）
 

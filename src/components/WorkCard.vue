@@ -41,11 +41,20 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
         </span>
         <span v-if="work.stars > 0">★ {{ work.stars }}</span>
         <a
+          :href="work.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ext-link relative z-10 ml-auto"
+          :aria-label="`在 GitHub 打开：${work.course}·${work.title}`"
+        >
+          仓库 ↗
+        </a>
+        <a
           v-if="mirrorUrl"
           :href="mirrorUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="mirror-link relative z-10 ml-auto"
+          class="ext-link relative z-10"
           :aria-label="`在国内镜像站打开：${work.course}·${work.title}`"
         >
           镜像 ↗
@@ -63,7 +72,7 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
 </template>
 
 <style scoped>
-.mirror-link {
+.ext-link {
   color: var(--text-dim);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -73,7 +82,7 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
     text-decoration-color 0.2s ease;
 }
 
-.mirror-link:hover {
+.ext-link:hover {
   color: var(--accent);
   text-decoration-color: currentColor;
 }

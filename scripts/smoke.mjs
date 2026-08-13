@@ -1,6 +1,6 @@
 /**
- * 构建冒烟（§9）：dist/index.html 存在且包含全部标题、每张卡片的 GitHub 外链、
- * 镜像入口（配置时）与「待评分」徽章文案。
+ * 构建冒烟（§9）：dist/index.html 存在且包含全部标题、每张卡片的 GitHub 外链
+ * 与「待评分」徽章文案。
  */
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -13,7 +13,7 @@ function assert(cond, message) {
   if (!cond) failures.push(message);
 }
 
-const { mirror, works } = JSON.parse(
+const { works } = JSON.parse(
   await readFile(path.join(ROOT, 'src', 'data', 'works.json'), 'utf8'),
 );
 assert(Array.isArray(works) && works.length >= 1, 'works.json 为空');
@@ -32,12 +32,6 @@ if (indexHtml) {
       indexHtml.includes(`https://github.com/${work.owner}/${work.repo}`),
       `index.html 缺少 GitHub 外链：${work.owner}/${work.repo}`,
     );
-    if (mirror) {
-      assert(
-        indexHtml.includes(`${mirror}/${work.owner}/${work.repo}`),
-        `index.html 缺少镜像外链：${work.owner}/${work.repo}`,
-      );
-    }
   }
   if (works.some((w) => w.score === null)) {
     assert(indexHtml.includes('待评分'), 'index.html 缺少「待评分」徽章文案');
@@ -49,6 +43,4 @@ if (failures.length > 0) {
   for (const f of failures) console.error(`  ✗ ${f}`);
   process.exit(1);
 }
-console.log(
-  `冒烟通过：index.html 含 ${works.length} 张卡片的 GitHub 外链${mirror ? '与镜像入口' : ''}`,
-);
+console.log(`冒烟通过：index.html 含 ${works.length} 张卡片的 GitHub 外链`);

@@ -31,19 +31,10 @@ export interface Work {
 }
 
 interface WorksData {
-  mirror: string | null;
   works: Work[];
 }
 
 const data = rawData as WorksData;
 
-/** 国内镜像站根地址（works.yaml 的 mirror 字段；null = 不显示镜像入口） */
-export const mirror: string | null = data.mirror;
-
 /** 全量作业：未出分置顶，组内日期降序（§6.1） */
 export const works: Work[] = sortWorks(data.works);
-
-/** 镜像站上的仓库地址 */
-export function mirrorUrlFor(work: Work): string | null {
-  return mirror ? `${mirror}/${work.owner}/${work.repo}` : null;
-}

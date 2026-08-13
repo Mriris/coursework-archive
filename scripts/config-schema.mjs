@@ -17,10 +17,6 @@ export const WorkEntrySchema = z.strictObject({
 });
 
 export const ConfigSchema = z.strictObject({
-  mirror: z
-    .string()
-    .regex(/^https?:\/\/[^\s/]+\/?$/, 'mirror 必须是形如 https://kkgithub.com 的站点根地址')
-    .optional(),
   works: z.array(WorkEntrySchema).min(1),
 });
 
@@ -28,7 +24,6 @@ export const ConfigSchema = z.strictObject({
 export function parseConfig(data) {
   const cfg = ConfigSchema.parse(data);
   return {
-    mirror: cfg.mirror ? cfg.mirror.replace(/\/+$/, '') : null,
     entries: cfg.works.map((entry) => {
       const m = entry.url.match(GITHUB_URL_RE);
       return { ...entry, owner: m[1], repo: m[2] };

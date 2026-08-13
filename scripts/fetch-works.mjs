@@ -89,8 +89,8 @@ async function main() {
   await preflight();
 
   const yamlText = await readFile(path.join(ROOT, 'works.yaml'), 'utf8');
-  const { mirror, entries } = parseConfig(YAML.parse(yamlText));
-  console.log(`works.yaml：${entries.length} 个仓库${mirror ? `，镜像 ${mirror}` : ''}`);
+  const { entries } = parseConfig(YAML.parse(yamlText));
+  console.log(`works.yaml：${entries.length} 个仓库`);
 
   const works = await Promise.all(entries.map((entry) => fetchWork(entry)));
   for (const w of works) {
@@ -104,7 +104,7 @@ async function main() {
   await mkdir(outDir, { recursive: true });
   await writeFile(
     path.join(outDir, 'works.json'),
-    `${JSON.stringify({ mirror, works }, null, 2)}\n`,
+    `${JSON.stringify({ works }, null, 2)}\n`,
     'utf8',
   );
   console.log(`已写入 src/data/works.json（${works.length} 条）`);

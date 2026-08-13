@@ -15,22 +15,9 @@ describe('parseConfig（§4.2 校验）', () => {
     expect(entries[0].repo).toBe('PeopleOps');
   });
 
-  it('mirror 可选：缺省为 null，末尾斜杠归一化', () => {
-    const noMirror = parseConfig({ works: [{ url: 'https://github.com/a/b' }] });
-    expect(noMirror.mirror).toBeNull();
-    const withMirror = parseConfig({
-      mirror: 'https://kkgithub.com/',
-      works: [{ url: 'https://github.com/a/b' }],
-    });
-    expect(withMirror.mirror).toBe('https://kkgithub.com');
-  });
-
-  it('mirror 带路径或非法值拒绝', () => {
+  it('未知顶层字段拒绝（strictObject）', () => {
     expect(() =>
-      parseConfig({ mirror: 'https://kkgithub.com/some/path', works: [{ url: 'https://github.com/a/b' }] }),
-    ).toThrow();
-    expect(() =>
-      parseConfig({ mirror: 'kkgithub.com', works: [{ url: 'https://github.com/a/b' }] }),
+      parseConfig({ mirror: 'https://kkgithub.com', works: [{ url: 'https://github.com/a/b' }] }),
     ).toThrow();
   });
 

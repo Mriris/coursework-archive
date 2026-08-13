@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { mirrorUrlFor, type Work } from '../composables/useWorks';
+import type { Work } from '../composables/useWorks';
 import ScoreBadge from './ScoreBadge.vue';
 
 const props = defineProps<{ work: Work; entranceIndex?: number }>();
@@ -11,12 +11,10 @@ const cardStyle = computed(() => ({
   ...(props.work.hue === null ? { '--c': '0' } : {}),
   '--i': String(props.entranceIndex ?? 0),
 }));
-
-const mirrorUrl = computed(() => mirrorUrlFor(props.work));
 </script>
 
 <template>
-  <!-- 整卡外跳 GitHub 仓库；镜像入口为独立链接叠在覆盖层之上（避免 <a> 嵌套） -->
+  <!-- 整卡外跳 GitHub 仓库：绝对定位覆盖层承担全部点击，卡内不再放显式链接 -->
   <div class="work-card entrance group relative h-full" :style="cardStyle">
     <article class="panel relative flex h-full flex-col gap-2.5 rounded-xl p-5">
       <div class="flex items-center justify-between gap-3">
@@ -40,25 +38,6 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
           {{ work.primaryLanguage }}
         </span>
         <span v-if="work.stars > 0">★ {{ work.stars }}</span>
-        <a
-          :href="work.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="ext-link relative z-10 ml-auto"
-          :aria-label="`在 GitHub 打开：${work.course}·${work.title}`"
-        >
-          仓库↗
-        </a>
-        <a
-          v-if="mirrorUrl"
-          :href="mirrorUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="ext-link relative z-10"
-          :aria-label="`在国内镜像站打开：${work.course}·${work.title}`"
-        >
-          镜像↗
-        </a>
       </div>
     </article>
     <a
@@ -70,20 +49,3 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
     />
   </div>
 </template>
-
-<style scoped>
-.ext-link {
-  color: var(--text-dim);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: transparent;
-  transition:
-    color 0.2s ease,
-    text-decoration-color 0.2s ease;
-}
-
-.ext-link:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
-}
-</style>

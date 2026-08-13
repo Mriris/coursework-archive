@@ -46,6 +46,7 @@ works.yaml → scripts/fetch-works.mjs（唯一有 I/O 的模块）→ src/data/
 - 入口 `src/main.ts` 用 `vite-ssg/single-page`（无 vue-router），`App.vue` = MotionConfig + IndexView；背景场景（受光/渐晕/噪点）由 obsidian.css 的 `body::before/::after` 纯 CSS 承担。
 - 排序在 `src/composables/sortWorks.ts`（纯函数，有单测）：`score === null`（待评分）置顶，两组内部按 date 降序；筛选不改变顺序。首页把待评分/已评分两组上下分开渲染，中间 `.group-divider` 虚线分割（任一组为空则不渲染分割线，见 IndexView）。
 - 卡片左上角展示归档年月（`work.date`，形如 `2023-10`）；卡片主标题是课程名（`course`），副行是作业名（`title`）。
+- 站点标识在 `public/`（非 `src/assets/`，因为 index.html 的 favicon / og:image 需要稳定 URL）：`logo.png`（320×320 圆形，页头 + og:image）、`favicon.png`（64×64 圆形）、`apple-touch-icon.png`（180×180 方形不透明，iOS 会自行加圆角，透明区会被填黑故不留 alpha）。三者均由同一张方形原图派生，圆形 alpha 已烘焙进 PNG。**Vue 组件里引用 public 资源必须拼 `import.meta.env.BASE_URL`**（部署在 `/coursework-archive/` 子路径），见 IndexView 的 `logoUrl`；`.site-logo` 的铜金细环在 obsidian.css。
 - 卡片外链结构：整卡是绝对定位的覆盖层 `<a class="card-link">`（GitHub），右下角「仓库↗」「镜像↗」两个显式 `<a class="ext-link">` 以 `z-10` 叠在其上 —— **不允许 `<a>` 嵌套**，改动卡片时保持该结构。
 
 ### 主题与视觉（玄鉴 · OKLCH 双主题）

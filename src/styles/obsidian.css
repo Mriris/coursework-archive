@@ -137,6 +137,14 @@ body::after {
   }
 }
 
+/* ---- 站点标识：图片本身已烘焙圆形 alpha，这里只补铜金细环与轻微投影 ---- */
+.site-logo {
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 45%, transparent),
+    0 2px 12px oklch(0 0 0 / 0.28);
+}
+
 /* ---- 铜金细线：页眉分隔（左实右虚，典雅收笔） ---- */
 .gold-rule {
   height: 1px;

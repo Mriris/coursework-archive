@@ -37,13 +37,25 @@ const scoredFiltered = computed(() => filtered.value.filter((w) => w.score !== n
 
 const yearSpan = `${Math.min(...works.map((w) => w.year))}—${Math.max(...works.map((w) => w.year))}`;
 const pendingCount = works.filter((w) => w.score === null).length;
+
+// logo 放在 public/，需自行拼 base（部署在 /coursework-archive/ 子路径下）
+const logoUrl = `${import.meta.env.BASE_URL}logo.png`;
 </script>
 
 <template>
   <div class="mx-auto max-w-6xl px-5 py-10 md:py-14">
     <header class="mb-10">
       <div class="flex items-start justify-between gap-4">
-        <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">大作业存档</h1>
+        <div class="flex items-center gap-4">
+          <img
+            :src="logoUrl"
+            alt="站点标识"
+            width="60"
+            height="60"
+            class="site-logo size-12 shrink-0 md:size-15"
+          />
+          <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">大作业存档</h1>
+        </div>
         <ThemeToggle />
       </div>
       <div class="gold-rule mt-6" aria-hidden="true" />

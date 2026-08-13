@@ -1,0 +1,13 @@
+# 大作业收录清单（§2）：每条最少只写 url，其余从 GitHub 仓库描述自动解析。
+# 可手填 course / title / date / score 逐字段覆盖自动解析结果；
+# score: null 表示显式强制"进行中"，不写 score 则采用描述中解析出的分数。
+# 增删科目 = 增删条目。
+works:
+  - url: https://github.com/Mriris/Classic-AI-Projects
+  - url: https://github.com/Mriris/SmartAcademicManagementSystem
+  - url: https://github.com/Mriris/muaCloud
+  - url: https://github.com/Mriris/PA-UIENet
+  - url: https://github.com/Mriris/summer-camp-system
+  - url: https://github.com/Mriris/PeopleOps
+  - url: https://github.com/Mriris/PatternRecognition
+  - url: https://github.com/Mriris/catia-v5-aircraft-automation

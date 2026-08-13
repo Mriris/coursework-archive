@@ -37,9 +37,6 @@ const scoredFiltered = computed(() => filtered.value.filter((w) => w.score !== n
 
 const yearSpan = `${Math.min(...works.map((w) => w.year))}—${Math.max(...works.map((w) => w.year))}`;
 const pendingCount = works.filter((w) => w.score === null).length;
-const scores = works.map((w) => w.score).filter((s): s is number => s !== null);
-const avgScore =
-  scores.length > 0 ? (scores.reduce((sum, s) => sum + s, 0) / scores.length).toFixed(1) : null;
 </script>
 
 <template>
@@ -51,9 +48,9 @@ const avgScore =
       </div>
       <div class="gold-rule mt-6" aria-hidden="true" />
       <p class="mt-4 font-mono text-[13px] tracking-wide" style="color: var(--text-dim)">
-        {{ yearSpan }} · 共 {{ works.length }} 项课程大作业<template v-if="avgScore">
-          · 均分 {{ avgScore }}</template
-        ><template v-if="pendingCount > 0"> · {{ pendingCount }} 项待评分</template>
+        {{ yearSpan }} · 共 {{ works.length }} 项课程大作业<template v-if="pendingCount > 0">
+          · {{ pendingCount }} 项待评分</template
+        >
       </p>
     </header>
 

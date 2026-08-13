@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { useHead } from '@unhead/vue';
 import { motion } from 'motion-v';
 import { computed, ref } from 'vue';
 import FilterBar from '../components/FilterBar.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import WorkCard from '../components/WorkCard.vue';
 import { works } from '../composables/useWorks';
-
-useHead({ title: '大作业存档 · Mriris' });
 
 const year = ref('all');
 const language = ref('all');

@@ -5,14 +5,33 @@ const DESC = '【2024-11】东软实习-企业人事管理系统-100';
 
 describe('parseConfig（§4.2 校验）', () => {
   it('url-only 条目通过并展开 owner / repo', () => {
-    const [entry] = parseConfig({ works: [{ url: 'https://github.com/Mriris/PeopleOps' }] });
-    expect(entry.owner).toBe('Mriris');
-    expect(entry.repo).toBe('PeopleOps');
+    const { entries } = parseConfig({ works: [{ url: 'https://github.com/Mriris/PeopleOps' }] });
+    expect(entries[0].owner).toBe('Mriris');
+    expect(entries[0].repo).toBe('PeopleOps');
   });
 
   it('url 末尾斜杠可容忍', () => {
-    const [entry] = parseConfig({ works: [{ url: 'https://github.com/Mriris/PeopleOps/' }] });
-    expect(entry.repo).toBe('PeopleOps');
+    const { entries } = parseConfig({ works: [{ url: 'https://github.com/Mriris/PeopleOps/' }] });
+    expect(entries[0].repo).toBe('PeopleOps');
+  });
+
+  it('mirror 可选：缺省为 null，末尾斜杠归一化', () => {
+    const noMirror = parseConfig({ works: [{ url: 'https://github.com/a/b' }] });
+    expect(noMirror.mirror).toBeNull();
+    const withMirror = parseConfig({
+      mirror: 'https://kkgithub.com/',
+      works: [{ url: 'https://github.com/a/b' }],
+    });
+    expect(withMirror.mirror).toBe('https://kkgithub.com');
+  });
+
+  it('mirror 带路径或非法值拒绝', () => {
+    expect(() =>
+      parseConfig({ mirror: 'https://kkgithub.com/some/path', works: [{ url: 'https://github.com/a/b' }] }),
+    ).toThrow();
+    expect(() =>
+      parseConfig({ mirror: 'kkgithub.com', works: [{ url: 'https://github.com/a/b' }] }),
+    ).toThrow();
   });
 
   it('非 github.com 仓库 url 拒绝', () => {

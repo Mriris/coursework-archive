@@ -1,12 +1,13 @@
 # 大作业存档站
 
-课程大作业聚合存档：一眼看清全部作业的时间跨度、课程来源、技术栈与成绩，不跳出站点读完每个作业的完整 README。
+课程大作业聚合存档：一眼看清全部作业的时间跨度、课程来源、技术栈与成绩，点击卡片直达对应仓库（GitHub / 国内镜像）。
 
 **线上地址**：<https://mriris.github.io/coursework-archive/>
 
 ## 特性
 
-- **构建时固化数据**：`gh api` 抓取仓库元数据与 README，渲染、高亮、sanitize 后写入 `src/data/works.json`；浏览器运行时零网络请求，源仓库将来删除或转私有也不影响已发布站点。
+- **构建时固化数据**：`gh api` 抓取仓库元数据写入 `src/data/works.json`；浏览器运行时零网络请求。
+- **直达仓库**：整卡外跳 GitHub，右下角另有「镜像 ↗」入口（`works.yaml` 的 `mirror` 字段配置镜像站根地址，删掉该行则隐藏）。
 - **明暗双主题**：OKLCH 锁色相，暗色发光（emissive）/ 浅色色散（refractive）两套光照隐喻，View Transitions 圆形扩散切换。
 - **全息视觉**：Inspira UI 组件子集（CardSpotlight / GlowBorder / AuroraBackground）+ motion-v 交互，纯 CSS/pointer 实现，无 WebGL。
 - **未出分置顶**：`score === null`（进行中）的作业固定排在最前，方便任课老师第一眼看到。
@@ -31,5 +32,3 @@ npm test        # 数据管线单测（Vitest）
 npm run build   # fetch + vite-ssg 预渲染
 npm run smoke   # 构建产物冒烟断言
 ```
-
-设计文档见 [`docs/superpowers/specs/2026-08-09-coursework-archive-site-design.md`](docs/superpowers/specs/2026-08-09-coursework-archive-site-design.md)。

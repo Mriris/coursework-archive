@@ -1,18 +1,7 @@
-import { ViteSSG } from 'vite-ssg';
+import { ViteSSG } from 'vite-ssg/single-page';
 import App from './App.vue';
-import IndexView from './views/IndexView.vue';
-import WorkView from './views/WorkView.vue';
 import './styles/theme.css';
 import './styles/holo.css';
-import './styles/markdown.css';
 
-const routes = [
-  { path: '/', component: IndexView },
-  { path: '/work/:repo', component: WorkView },
-];
-
-export const createApp = ViteSSG(App, {
-  routes,
-  base: import.meta.env.BASE_URL,
-  scrollBehavior: () => ({ top: 0 }),
-});
+// 站点只有卡片墙一页，详情外跳 GitHub / 镜像站（§6），故用 single-page 模式
+export const createApp = ViteSSG(App);

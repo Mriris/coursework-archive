@@ -72,8 +72,8 @@
   pointer-events: none;
 }
 
-a:hover > .glow-border::before,
-a:focus-visible > .glow-border::before,
+.work-card:hover .glow-border::before,
+.work-card:focus-within .glow-border::before,
 .glow-border:hover::before {
   opacity: 1;
   animation: glow-rotate var(--glow-duration, 4s) linear infinite;
@@ -195,10 +195,9 @@ a:focus-visible > .glow-border::before,
 }
 
 /* ---- 焦点环使用当前色相（§5.4） ---- */
-.work-card:focus-visible {
+.card-link:focus-visible {
   outline: 2px solid var(--wa);
   outline-offset: 3px;
-  border-radius: 1rem;
 }
 
 a:focus-visible,

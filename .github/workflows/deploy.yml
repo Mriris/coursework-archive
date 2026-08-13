@@ -1,0 +1,48 @@
+# 部署（§10）：Pages artifact 方式（Vite 官方现行推荐，非 gh-pages 分支）。
+# npm test 置于 build 之前：解析器出错会产出静默错误的站点，必须在发布前拦截。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 手动重建，用于刷新 star 数 / 描述变更
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          # runner 预装 gh，注入 token 供 gh api 认证（§4.1）
+          GH_TOKEN: ${{ github.token }}
+      - run: npm run smoke
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

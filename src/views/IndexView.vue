@@ -31,6 +31,10 @@ const filtered = computed(() =>
   }),
 );
 
+// 待评分组与已评分组上下分开渲染，中间虚线分割；组内顺序沿用 sortWorks（§6.1）
+const pendingFiltered = computed(() => filtered.value.filter((w) => w.score === null));
+const scoredFiltered = computed(() => filtered.value.filter((w) => w.score !== null));
+
 const yearSpan = `${Math.min(...works.map((w) => w.year))}—${Math.max(...works.map((w) => w.year))}`;
 const pendingCount = works.filter((w) => w.score === null).length;
 const scores = works.map((w) => w.score).filter((s): s is number => s !== null);
@@ -49,7 +53,7 @@ const avgScore =
       <p class="mt-4 font-mono text-[13px] tracking-wide" style="color: var(--text-dim)">
         {{ yearSpan }} · 共 {{ works.length }} 项课程大作业<template v-if="avgScore">
           · 均分 {{ avgScore }}</template
-        ><template v-if="pendingCount > 0"> · {{ pendingCount }} 项待评分（置顶）</template>
+        ><template v-if="pendingCount > 0"> · {{ pendingCount }} 项待评分</template>
       </p>
     </header>
 
@@ -64,9 +68,12 @@ const avgScore =
       class="mb-8"
     />
 
-    <div class="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
+    <div
+      v-if="pendingFiltered.length > 0"
+      class="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]"
+    >
       <motion.div
-        v-for="(w, i) in filtered"
+        v-for="(w, i) in pendingFiltered"
         :key="w.repo"
         layout
         :while-hover="{ y: -4 }"
@@ -75,6 +82,29 @@ const avgScore =
         class="h-full"
       >
         <WorkCard :work="w" :entrance-index="i" />
+      </motion.div>
+    </div>
+
+    <div
+      v-if="pendingFiltered.length > 0 && scoredFiltered.length > 0"
+      class="group-divider my-8"
+      aria-hidden="true"
+    />
+
+    <div
+      v-if="scoredFiltered.length > 0"
+      class="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]"
+    >
+      <motion.div
+        v-for="(w, i) in scoredFiltered"
+        :key="w.repo"
+        layout
+        :while-hover="{ y: -4 }"
+        :while-press="{ scale: 0.98 }"
+        :transition="{ type: 'spring', stiffness: 350, damping: 26 }"
+        class="h-full"
+      >
+        <WorkCard :work="w" :entrance-index="pendingFiltered.length + i" />
       </motion.div>
     </div>
 

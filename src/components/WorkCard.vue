@@ -19,8 +19,8 @@ const mirrorUrl = computed(() => mirrorUrlFor(props.work));
   <!-- 整卡外跳 GitHub 仓库；镜像入口为独立链接叠在覆盖层之上（避免 <a> 嵌套） -->
   <div class="work-card entrance group relative h-full" :style="cardStyle">
     <article class="panel relative flex h-full flex-col gap-2.5 rounded-xl p-5">
-      <div class="flex items-start justify-between gap-3">
-        <span class="pt-1 font-mono text-[13px] tracking-widest" style="color: var(--text-dim)">
+      <div class="flex items-center justify-between gap-3">
+        <span class="font-mono text-[13px] tracking-widest" style="color: var(--text-dim)">
           {{ work.date }}
         </span>
         <ScoreBadge :score="work.score" />

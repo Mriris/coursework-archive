@@ -148,6 +148,12 @@ body::after {
   );
 }
 
+/* ---- 待评分 / 已评分分组分割：铜金调虚线（两组之一为空时不渲染，见 IndexView） ---- */
+.group-divider {
+  height: 0;
+  border-top: 1px dashed color-mix(in oklch, var(--accent) 40%, var(--border));
+}
+
 /* ---- 入场：CSS stagger（无 JS 也完整可读，animation 由 CSS 自行播放） ---- */
 .entrance {
   animation: rise-in 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;

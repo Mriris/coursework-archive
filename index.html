@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大作业存档 · Mriris</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="课程大作业存档站：时间跨度、课程来源、技术栈、成绩与完整 README，一站可读。" />
+    <script>
+      // 首帧前根据持久化偏好挂 .dark，避免 SSG 静态页闪白/闪黑
+      ;(function () {
+        try {
+          var s = localStorage.getItem('vueuse-color-scheme') || 'auto';
+          var dark =
+            s === 'dark' ||
+            (s === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

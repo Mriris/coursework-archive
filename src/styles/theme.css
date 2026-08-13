@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    system-ui, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', Consolas, 'Courier New', monospace;
+}
+
+/*
+ * §5.1 明暗不是取反，是两种光照。
+ * §5.2 OKLCH 锁色相：色相角固定，明暗只调 L / C。
+ * 每张卡片通过 style 注入 --hue（色相表未命中时注入 --c: 0 回退中性灰）。
+ */
+:root {
+  /* 浅色 · refractive（色散）：近白微冷灰底，中亮度高饱和强调，无 glow */
+  --bg: oklch(0.98 0.003 250);
+  --bg-soft: oklch(0.955 0.005 250);
+  --surface: oklch(0.998 0.001 250);
+  --text: oklch(0.28 0.02 262);
+  --text-dim: oklch(0.5 0.015 262);
+  --border: oklch(0.88 0.008 255);
+  --hue-accent: 285;
+  --accent: oklch(0.52 0.19 var(--hue-accent));
+  --chip-bg: oklch(0.945 0.008 255);
+  --card-l: 0.5;
+  --card-c: 0.17;
+  --card-glow-alpha: 0; /* 浅色主题无 glow（§5.1） */
+  --card-ring-alpha: 0.5; /* 锐利多色描边 */
+  --aurora-opacity: 0.2;
+  --grid-line: oklch(0.5 0.01 260 / 0.05);
+  --shadow-card:
+    0 1px 2px oklch(0.3 0.02 262 / 0.07), 0 10px 28px oklch(0.3 0.02 262 / 0.08);
+}
+
+.dark {
+  /* 暗色 · emissive（发光）：近黑微偏色相底，高亮度低饱和霓虹 + glow */
+  --bg: oklch(0.155 0.015 268);
+  --bg-soft: oklch(0.19 0.018 268);
+  --surface: oklch(0.225 0.02 268 / 0.55);
+  --text: oklch(0.93 0.008 262);
+  --text-dim: oklch(0.71 0.018 262);
+  --border: oklch(0.33 0.02 268);
+  --accent: oklch(0.78 0.17 var(--hue-accent));
+  --chip-bg: oklch(0.27 0.02 268);
+  --card-l: 0.78;
+  --card-c: 0.15;
+  --card-glow-alpha: 0.35;
+  --card-ring-alpha: 0.38;
+  --aurora-opacity: 0.32;
+  --grid-line: oklch(0.9 0.01 260 / 0.035);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 14px 36px oklch(0 0 0 / 0.35);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: oklch(var(--card-l) var(--card-c) var(--hue-accent) / 0.3);
+}

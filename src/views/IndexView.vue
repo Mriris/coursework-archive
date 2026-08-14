@@ -2,7 +2,6 @@
 import { motion } from 'motion-v';
 import { computed, ref } from 'vue';
 import FilterBar from '../components/FilterBar.vue';
-import MotionToggle from '../components/MotionToggle.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import WorkCard from '../components/WorkCard.vue';
 import { works } from '../composables/useWorks';
@@ -57,10 +56,7 @@ const logoUrl = `${import.meta.env.BASE_URL}logo.png`;
           />
           <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">大作业存档</h1>
         </div>
-        <div class="flex items-center gap-2">
-          <MotionToggle />
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </div>
       <div class="gold-rule mt-6" aria-hidden="true" />
       <p class="mt-4 font-mono text-[13px] tracking-wide" style="color: var(--text-dim)">

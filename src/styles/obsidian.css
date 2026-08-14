@@ -220,7 +220,7 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* ---- 页眉图标按钮：ThemeToggle / MotionToggle 共用外观 ---- */
+/* ---- 页眉图标按钮（ThemeToggle） ---- */
 .icon-toggle {
   display: inline-flex;
   align-items: center;
@@ -239,23 +239,4 @@ input:focus-visible {
 .icon-toggle:hover {
   border-color: var(--accent);
   color: var(--accent);
-}
-
-/* ---- 动画总开关（§5.4 改版）：默认全开、无视系统 prefers-reduced-motion；
-   页眉 MotionToggle 关闭时 html 挂 .reduce-motion，此处关掉掠光/脉冲/入场/扩散 ---- */
-html.reduce-motion .entrance {
-  animation: none;
-}
-
-html.reduce-motion .seal-pending {
-  animation: none;
-}
-
-html.reduce-motion .panel::before {
-  animation: none !important;
-}
-
-html.reduce-motion::view-transition-old(root),
-html.reduce-motion::view-transition-new(root) {
-  animation: none !important;
 }

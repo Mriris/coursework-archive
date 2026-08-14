@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useDark } from '@vueuse/core';
 import { nextTick } from 'vue';
-import { motionEnabled } from '../composables/useMotionPref';
 
 // disableTransition：切换瞬间禁用元素级 transition，避免与 View Transition 叠加闪烁
 const isDark = useDark({ disableTransition: true });
@@ -10,13 +9,11 @@ type DocWithVT = Document & {
   startViewTransition?: (callback: () => Promise<void> | void) => { ready: Promise<void> };
 };
 
-// View Transitions API 圆形扩散，从点击坐标铺开（§5.3）；
-// 不支持或页面级动画开关关闭时退化为直接切换（§5.4）。
+// View Transitions API 圆形扩散，从点击坐标铺开（§5.3）；浏览器不支持时退化为直接切换。
 function toggle(event: MouseEvent) {
   const doc = document as DocWithVT;
-  const canTransition = typeof doc.startViewTransition === 'function' && motionEnabled.value;
 
-  if (!canTransition) {
+  if (typeof doc.startViewTransition !== 'function') {
     isDark.value = !isDark.value;
     return;
   }

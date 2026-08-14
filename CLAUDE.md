@@ -58,7 +58,7 @@ works.yaml → scripts/fetch-works.mjs（唯一有 I/O 的模块）→ src/data/
 - 标题衬线为 Noto Serif SC 700：构建时按用字子集化（见上方 `scripts/subset-font.mjs`），`@font-face` 声明在 theme.css 顶部，指向 `src/assets/` 下的子集 woff2；正文系统黑体、数据等宽。
 - 特效全部是全局 CSS（`src/styles/obsidian.css`）：精密面板 `.panel`、hover 铜金掠光一次（`.panel::before` conic mask）、评分钤印 `.seal`（满分双圈 / 待评分虚线脉冲）、页眉金线 `.gold-rule`；Inspira UI 组件已全部移除，**不引入 WebGL/Canvas 类组件**。交互动效用 motion-v，入场 stagger 是纯 CSS（`--i` 变量），保证静态 HTML 不执行 JS 也完整可读。
 - 主题切换：VueUse `useDark`（class `.dark`，storage key `vueuse-color-scheme`）+ index.html 内联防闪烁脚本 + ThemeToggle 的 View Transitions 圆形扩散。
-- 动画总开关：**默认全开、无视系统 `prefers-reduced-motion`**（obsidian.css 原媒体查询门控已改为 `html.reduce-motion` 类门控）。状态在 `src/composables/useMotionPref.ts`（storage key `motion-preference`，值 `on`/`off`），页眉 MotionToggle 切换，index.html 内联脚本首帧前挂类防闪；motion-v 侧由 App.vue 的 `MotionConfig :reduced-motion` 联动（开→`never`，关→`always`），ThemeToggle 的圆形扩散同走此开关。Tailwind 自定义变体 `reduce-motion:`（theme.css）控制图标显隐；页眉两个圆形图标按钮共用 obsidian.css 的 `.icon-toggle`。
+- 动画恒定全开、**无视系统 `prefers-reduced-motion`**：obsidian.css 不设任何 reduced-motion 门控，motion-v 侧由 App.vue 的 `MotionConfig reduced-motion="never"` 强制播放。曾有的页眉 MotionToggle 开关（useMotionPref / `.reduce-motion` 类 / `reduce-motion:` 变体）已整体移除，不要再加回。页眉圆形图标按钮外观是 obsidian.css 的 `.icon-toggle`。
 
 ### ⚠ 已踩过的坑：scoped 样式里的 `:global(.dark)`
 

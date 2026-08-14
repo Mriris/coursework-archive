@@ -12,7 +12,7 @@
     <meta property="og:image" content="https://mriris.github.io/coursework-archive/logo.png" />
     <meta property="og:type" content="website" />
     <script>
-      // 首帧前根据持久化偏好挂 .dark / .reduce-motion，避免 SSG 静态页闪白/闪黑或入场动画误播
+      // 首帧前根据持久化偏好挂 .dark，避免 SSG 静态页闪白/闪黑
       ;(function () {
         try {
           var s = localStorage.getItem('vueuse-color-scheme') || 'auto';
@@ -20,8 +20,6 @@
             s === 'dark' ||
             (s === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (dark) document.documentElement.classList.add('dark');
-          if (localStorage.getItem('motion-preference') === 'off')
-            document.documentElement.classList.add('reduce-motion');
         } catch (e) {}
       })();
     </script>

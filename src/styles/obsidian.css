@@ -210,22 +210,42 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* ---- 无障碍：reduced motion 关闭掠光/脉冲/入场/扩散（§5.4） ---- */
-@media (prefers-reduced-motion: reduce) {
-  .entrance {
-    animation: none;
-  }
+/* ---- 页眉图标按钮：ThemeToggle / MotionToggle 共用外观 ---- */
+.icon-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
 
-  .seal-pending {
-    animation: none;
-  }
+.icon-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
-  .panel::before {
-    animation: none !important;
-  }
+/* ---- 动画总开关（§5.4 改版）：默认全开、无视系统 prefers-reduced-motion；
+   页眉 MotionToggle 关闭时 html 挂 .reduce-motion，此处关掉掠光/脉冲/入场/扩散 ---- */
+html.reduce-motion .entrance {
+  animation: none;
+}
 
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
-  }
+html.reduce-motion .seal-pending {
+  animation: none;
+}
+
+html.reduce-motion .panel::before {
+  animation: none !important;
+}
+
+html.reduce-motion::view-transition-old(root),
+html.reduce-motion::view-transition-new(root) {
+  animation: none !important;
 }

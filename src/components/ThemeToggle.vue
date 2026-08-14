@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDark } from '@vueuse/core';
 import { nextTick } from 'vue';
+import { motionEnabled } from '../composables/useMotionPref';
 
 // disableTransition：切换瞬间禁用元素级 transition，避免与 View Transition 叠加闪烁
 const isDark = useDark({ disableTransition: true });
@@ -10,12 +11,10 @@ type DocWithVT = Document & {
 };
 
 // View Transitions API 圆形扩散，从点击坐标铺开（§5.3）；
-// 不支持或 prefers-reduced-motion 时退化为直接切换（§5.4）。
+// 不支持或页面级动画开关关闭时退化为直接切换（§5.4）。
 function toggle(event: MouseEvent) {
   const doc = document as DocWithVT;
-  const canTransition =
-    typeof doc.startViewTransition === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const canTransition = typeof doc.startViewTransition === 'function' && motionEnabled.value;
 
   if (!canTransition) {
     isDark.value = !isDark.value;
@@ -47,7 +46,7 @@ function toggle(event: MouseEvent) {
 </script>
 
 <template>
-  <button type="button" class="theme-toggle" aria-label="切换明暗主题" @click="toggle">
+  <button type="button" class="icon-toggle" aria-label="切换明暗主题" @click="toggle">
     <!-- 两个图标常驻 DOM，由 Tailwind dark: 变体控制显隐，SSG 首帧无水合闪变 -->
     <svg
       class="hidden dark:block"
@@ -81,25 +80,3 @@ function toggle(event: MouseEvent) {
     </svg>
   </button>
 </template>
-
-<style scoped>
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.55rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-</style>

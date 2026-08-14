@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant reduce-motion (&:where(.reduce-motion, .reduce-motion *));
 
 /* 标题衬线：构建时按用字子集化的 Noto Serif SC 700（scripts/subset-font.mjs 生成） */
 @font-face {

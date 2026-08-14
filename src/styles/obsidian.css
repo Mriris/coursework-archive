@@ -180,6 +180,10 @@ body::after {
 }
 
 /* ---- 主题切换 View Transition：圆形扩散（§5.3） ---- */
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -194,6 +198,12 @@ body::after {
 ::view-transition-new(root),
 .dark::view-transition-old(root) {
   z-index: 9999;
+}
+
+/* 暗→亮方向新快照（亮）置顶：ready 只保证伪元素树已建、动画「即将」开始，
+   WAAPI 接管前可能先绘制一帧，故预设 0 半径裁剪，空档帧只露出底下的暗快照 */
+html:not(.dark)::view-transition-new(root) {
+  clip-path: circle(0);
 }
 
 /* ---- 焦点环（§5.4）：整卡链接用当前语言色相，其余用铜金 ---- */
